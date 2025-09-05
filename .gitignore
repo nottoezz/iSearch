@@ -1,0 +1,59 @@
+# --- Node ---
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# --- Builds & caches ---
+dist/
+build/
+client/dist/
+server/dist/
+.nyc_output/
+coverage/
+*.tsbuildinfo
+.eslintcache
+.parcel-cache/
+.cache/
+tmp/
+temp/
+
+# Vite cache (sometimes appears locally)
+client/.vite/
+
+# --- Env files (keep only examples) ---
+.env
+.env.*
+!.env.example
+!*/.env.example
+client/.env
+server/.env
+client/.env.*
+server/.env.*
+
+# --- Logs & pids ---
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+*.log
+logs/
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# --- OS / editor junk ---
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# --- Misc ---
+*.swp
+*.swo
+
+# If you generate local files for testing, ignore them here:
+# /server/local/
+# /client/local/

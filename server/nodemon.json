@@ -1,0 +1,11 @@
+{
+  "watch": ["src", "server.js", ".env"],
+  "ext": "js,mjs,json",
+  "exec": "node server.js",
+  "signal": "SIGTERM",
+  "env": {
+    "NODE_ENV": "development",
+    "NODE_OPTIONS": "--enable-source-maps"
+  },
+  "legacyWatch": true
+}

@@ -1,0 +1,170 @@
+/* ---- Readable, professional dark theme overrides (Bootstrap-friendly) ---- */
+:root {
+  --bg: #0c111b;
+  --surface: #121826;
+  --surface-2: #151c2f;
+  --text: #eef3f8;
+  --muted: #9fb1c5;
+  --muted-2: #94a3b8;
+  --primary: #79a6ff;
+  --primary-600: #5b8dff;
+  --border: rgba(148, 163, 184, 0.18);
+  --ring: #82b1ff;
+  --radius: 14px;
+  --shadow: 0 10px 28px rgba(2, 6, 23, 0.45);
+  --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+    "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-size: 17px; /* bump base size for readability */
+  --line-height: 1.6;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.container {
+  max-width: 1150px;
+}
+
+/* Navbar */
+.navbar {
+  background: #0e1424 !important;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  backdrop-filter: saturate(180%) blur(8px);
+}
+.navbar .navbar-brand {
+  letter-spacing: 0.2px;
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.card .card-title {
+  font-weight: 600;
+}
+.card-img-top {
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+  object-fit: cover;
+}
+
+/* Forms */
+.form-label {
+  font-weight: 600;
+  color: var(--muted-2);
+}
+.form-control,
+.form-select {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.7rem 0.9rem;
+}
+.form-control::placeholder {
+  color: #94a3b8;
+  opacity: 0.9;
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary);
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(122, 162, 255, 0.18);
+}
+
+/* Buttons */
+.btn {
+  border-radius: 12px;
+  padding: 0.6rem 0.95rem;
+  font-weight: 600;
+}
+.btn-primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #0b1020;
+}
+.btn-primary:hover {
+  background: var(--primary-600);
+  border-color: var(--primary-600);
+}
+.btn-outline-secondary {
+  border-color: var(--border);
+  color: var(--text);
+}
+.btn-outline-secondary:hover {
+  background: #1c2440;
+  border-color: #3a4a72;
+}
+.btn-outline-light {
+  border-color: #d0d8e3;
+  color: #e2e8f0;
+}
+
+/* Dropdown (Favourites) */
+.dropdown-menu {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.5rem;
+}
+.dropdown-item {
+  color: var(--text);
+}
+.dropdown-item:hover {
+  background: #1b2338;
+}
+.dropdown-menu .small {
+  color: var(--muted-2) !important;
+}
+
+/* Typography & utilities */
+.text-muted {
+  color: var(--muted-2) !important;
+}
+hr {
+  border-color: var(--border);
+}
+.shadow-soft {
+  box-shadow: var(--shadow);
+}
+.notice {
+  padding: 0.55rem 0.8rem;
+  background: #0f172a;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--muted-2);
+}
+
+/* Result grid tweaks */
+.row.g-3 > [class*="col-"] {
+  display: flex;
+}
+.card.h-100 {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Keyboard focus (accessible) */
+:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
