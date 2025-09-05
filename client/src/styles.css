@@ -157,9 +157,24 @@ hr {
 .row.g-3 > [class*="col-"] {
   display: flex;
 }
+
 .card.h-100 {
   display: flex;
   flex-direction: column;
+}
+
+.card-title {
+  color: var(--primary);
+}
+
+.media-portrait {
+  width: 100%;
+  aspect-ratio: 4 / 6;
+  object-fit: cover;
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+  display: block;
+  background: rgba(255, 255, 255, 0.03);
 }
 
 /* Keyboard focus (accessible) */
@@ -168,3 +183,52 @@ hr {
   outline-offset: 2px;
   border-radius: 10px;
 }
+
+/* --- Inline Details Panel (full-width below the row) --- */
+.details-panel {
+  margin-top: 0.25rem;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 18px;
+  padding: 14px;
+}
+
+.details-media {
+  align-self: start;
+}
+
+.details-info {
+  align-self: start;
+  col
+}
+
+.media-portrait.tall {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.mb-1{
+  color: var(--primary)
+}
+
+.mb-2{
+  color: var(--muted)
+}
+
+.section-title {
+  color: var(--muted-2)
+}
+
+@media (max-width: 992px) {
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Card media overlay (external link) --- */

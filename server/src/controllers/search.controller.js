@@ -11,7 +11,7 @@ function mapItem(item) {
   const collection = item.collectionName;
   const link = item.trackViewUrl || item.collectionViewUrl;
   const preview = item.previewUrl || null;
-  const artwork = (item.artworkUrl100 || "").replace("100x100", "300x300");
+  const artwork = (item.artworkUrl100 || "").replace("100x100", "600x600");
   // return formatted
   return {
     id,

@@ -1,38 +1,93 @@
-export default function ResultCard({ item, onAdd }) {
-  const img = item.artwork || "https://via.placeholder.com/300x300?text=No+Art";
-  const title = item.title || item.trackName || "Untitled";
-  const artist = item.artist || "Unknown";
-  const date = item.releaseDate
-    ? new Date(item.releaseDate).toISOString().slice(0, 10)
+// client/src/components/ResultCard.jsx
+export default function ResultCard({
+  item,
+  isFavourite = false,
+  onSelect,
+  onAdd,
+  onRemove,
+}) {
+  const data = item?.item || item || {};
+  const id = String(data.id ?? "");
+  const img =
+    data.artwork || "https://via.placeholder.com/1200x1200?text=No+Art";
+  const title = data.title || data.trackName || "Untitled";
+  const artist = data.artist || data.artistName || "Unknown";
+  const date = data.releaseDate
+    ? new Date(data.releaseDate).toISOString().slice(0, 10)
     : "";
 
+  const href =
+    data.linkUrl ||
+    data.link ||
+    data.trackViewUrl ||
+    data.collectionViewUrl ||
+    data.artistViewUrl ||
+    null;
+
   return (
-    <div className="card h-100 shadow-soft">
-      <img
-        src={img}
-        className="card-img-top"
-        alt={title}
-        style={{ objectFit: "cover", height: 180 }}
-      />
-      <div className="card-body d-flex flex-column">
-        <h6 className="card-title mb-1">{title}</h6>
-        <div className="text-muted small mb-2">{artist}</div>
-        {date && <div className="text-muted small mb-3">Release: {date}</div>}
-        <div className="mt-auto d-flex gap-2">
+    <div
+      className="card h-100 result-card hoverable"
+      onClick={() => onSelect?.(id)}
+      role="button"
+    >
+      <div className="position-relative">
+        <img src={img} alt={title} className="media-portrait" />
+
+        {href && (
           <a
-            className="btn btn-outline-secondary btn-sm"
-            href={item.linkUrl || "#"}
+            href={href}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
+            aria-label={`Open: ${title}`}
+            title="Open external link"
+            className="btn btn-sm btn-light position-absolute top-0 end-0 m-2 z-3 ext-link-btn"
+            onClick={(e) => e.stopPropagation()}
           >
-            View
+            ↗
           </a>
-          <button
-            className="btn btn-primary btn-sm"
-            onClick={() => onAdd(item)}
-          >
-            Add to favourites
-          </button>
+        )}
+      </div>
+
+      <div className="card-body d-flex flex-column">
+        <h5 className="card-title mb-1">{title}</h5>
+        <div className="meta mb-2">
+          {artist}
+          {date && ` • ${date}`}
+        </div>
+
+        <div className="mt-auto d-flex gap-2">
+          {href && (
+            <a
+              className="btn btn-outline-secondary btn-sm"
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+            >
+              View
+            </a>
+          )}
+          {!isFavourite ? (
+            <button
+              className="btn btn-primary btn-sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onAdd?.(data);
+              }}
+            >
+              Add
+            </button>
+          ) : (
+            <button
+              className="btn btn-outline-danger btn-sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onRemove?.(id);
+              }}
+            >
+              Remove
+            </button>
+          )}
         </div>
       </div>
     </div>
