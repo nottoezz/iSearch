@@ -1,91 +1,81 @@
-/* -------------------------------------------------- 
-Theme Tokens 
--------------------------------------------------- */
+/* --- Theme (Aurora Glass, higher contrast) --- */
 :root {
-  --bg: #0a0f1e;
-  --text: #eef5ff;
-  --muted: #b8c7da;
+  --bg: #070b18;
+  --text: #f2f7ff;
+  --muted: #b9c7da;
   --muted-2: #9fb1c5;
 
-  --primary: #7fc3ff;
-  --primary-600: #59b0ff;
+  --primary: #80c7ff;
+  --primary-600: #5ab3ff;
   --ring: #7dd3ff;
 
-  --glass-bg: rgba(14, 20, 40, 0.58);
-  --glass-bg-2: rgba(14, 20, 40, 0.72);
-  --glass-stroke: rgba(255, 255, 255, 0.1);
-  --glass-blur: 14px;
+  --glass-1: rgba(12, 18, 36, 0.62);
+  --glass-2: rgba(12, 18, 36, 0.78);
+  --glass-stroke: rgba(255, 255, 255, 0.12);
+  --blur: 14px;
 
-  --border: rgba(148, 163, 184, 0.25);
+  --border: rgba(148, 163, 184, 0.28);
   --radius: 18px;
-  --shadow: 0 20px 60px rgba(2, 6, 23, 0.55);
+  --shadow: 0 22px 60px rgba(2, 6, 23, 0.58);
 
   --card-img-h: 300px;
   --fav-thumb: 84px;
-  --font-size: 17.5px;
+  --fs: 18px;
 }
 
-/* -------------------------------------------------- 
-App Background
--------------------------------------------------- */
+/* --- Background & base typography --- */
 body {
   margin: 0;
   background: radial-gradient(
-      1200px 800px at 10% 10%,
-      rgba(124, 58, 237, 0.2),
+      1200px 800px at 10% 8%,
+      rgba(124, 58, 237, 0.22),
       transparent 60%
     ),
     radial-gradient(
-      900px 700px at 90% 20%,
-      rgba(34, 211, 238, 0.18),
+      900px 700px at 90% 18%,
+      rgba(34, 211, 238, 0.2),
       transparent 60%
     ),
     radial-gradient(
       1000px 900px at 50% 100%,
-      rgba(59, 130, 246, 0.2),
+      rgba(59, 130, 246, 0.22),
       transparent 60%
     ),
-    linear-gradient(180deg, #070b18 0%, #0a0f1e 60%, #0b1224 100%);
+    linear-gradient(180deg, #060a16 0%, #070b18 60%, #0a1022 100%);
   color: var(--text);
-  font-size: var(--font-size);
+  font-size: var(--fs);
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   background-attachment: fixed;
 }
 
-/* -------------------------------------------------- 
-Navbar
--------------------------------------------------- */
+/* --- Navbar & cards (glass) --- */
 .navbar {
-  background: var(--glass-bg) !important;
-  backdrop-filter: blur(var(--glass-blur)) saturate(130%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(130%);
+  background: var(--glass-1) !important;
+  backdrop-filter: blur(var(--blur)) saturate(130%);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(130%);
   border-bottom: 1px solid var(--glass-stroke);
   border-radius: 0 0 var(--radius) var(--radius);
 }
 
-/* -------------------------------------------------- 
-Cards
--------------------------------------------------- */
 .card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(130%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(130%);
+  background: var(--glass-1);
+  backdrop-filter: blur(var(--blur)) saturate(130%);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(130%);
   border: 1px solid var(--glass-stroke);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
 
-/* -------------------------------------------------- 
-Forms & Buttons
--------------------------------------------------- */
+/* --- Forms & buttons --- */
 .form-control,
 .form-select {
-  background: var(--glass-bg-2);
+  background: var(--glass-2);
   color: var(--text);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 0.75rem 0.95rem;
+  padding: 0.8rem 1rem;
 }
 
 .form-control::placeholder {
@@ -99,8 +89,7 @@ Forms & Buttons
   outline: 0;
 }
 .form-label {
-  color: var(--muted);
-  padding-left: 0.18rem;
+  color: var(--primary)
 }
 
 .btn {
@@ -130,15 +119,22 @@ Forms & Buttons
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.22);
 }
+.small {
+  color: var(--muted);
+}
 
-/* -------------------------------------------------- 
-Result Cards
--------------------------------------------------- */
-.result-card .card-img-top {
-  height: var(--card-img-h);
-  object-fit: cover;
-  border-top-left-radius: calc(var(--radius) - 1px);
-  border-top-right-radius: calc(var(--radius) - 1px);
+/* --- Result cards (readable hierarchy) --- */
+.result-card .card-img-top,
+.media-portrait { height: auto !important; }
+
+.media-portrait {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover; 
+  object-position: center;
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
 }
 
 .result-card .card-title {
@@ -148,123 +144,22 @@ Result Cards
 
 .result-card .meta {
   color: var(--muted);
-  font-size: 0.975rem;
+  font-size: 1rem;
 }
 
-/* -------------------------------------------------- 
-Favourites
--------------------------------------------------- */
-.fav-list {
-  max-height: calc(100vh - 220px);
-  overflow: auto;
-}
-
-.fav-item {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  padding: 12px 8px;
-  border-radius: 14px;
-  background: transparent;
-  transition: background 0.2s ease;
-}
-
-.fav-item:hover {
-  background: rgba(125, 211, 255, 0.08);
-}
-
-.fav-thumb {
-  width: var(--fav-thumb);
-  height: var(--fav-thumb);
-  object-fit: cover;
-  border-radius: 12px;
-  border: 1px solid var(--glass-stroke);
-}
-
-.fav-title {
-  font-weight: 700;
-}
-
-.fav-artist {
-  color: var(--muted);
-  font-size: 0.975rem;
-}
-
-/* -------------------------------------------------- 
-Offcanvas
--------------------------------------------------- */
-.offcanvas {
-  background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(130%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(130%);
-  color: var(--text);
-  border-left: 1px solid var(--glass-stroke);
-}
-
-.offcanvas .offcanvas-header {
-  border-bottom: 1px solid var(--glass-stroke);
-}
-
-/* -------------------------------------------------- 
-Grid Density
--------------------------------------------------- */
-@media (min-width: 768px) {
-  .col-md-6 {
-    flex: 0 0 auto;
-    width: 50%;
-  }
-}
-
-@media (min-width: 992px) {
-  .col-lg-4 {
-    flex: 0 0 auto;
-    width: 33.333333%;
-  }
-}
-
-/* -------------------------------------------------- 
-Feedback & Utilities
--------------------------------------------------- */
-.notice {
-  padding: 0.65rem 0.9rem;
-  background: var(--glass-bg-2);
-  border: 1px solid var(--glass-stroke);
-  border-radius: 12px;
-  color: var(--muted);
-}
-
-/* Result grid tweaks */
-.row.g-3 > [class*="col-"] {
-  display: flex;
-}
-
-.card.h-100 {
-  display: flex;
-  flex-direction: column;
-}
-
-.card-title {
+.mb-1 {
   color: var(--primary);
 }
 
-.media-portrait {
-  width: 100%;
-  aspect-ratio: 4 / 6;
-  object-fit: cover;
-  border-top-left-radius: var(--radius);
-  border-top-right-radius: var(--radius);
-  display: block;
-  background: rgba(255, 255, 255, 0.03);
+.mb-2 {
+  color: var(--text);
 }
 
-/* Keyboard focus (accessible) */
-:focus-visible {
-  outline: 3px solid var(--ring);
-  outline-offset: 2px;
-  border-radius: 10px;
+.mb-3 {
+  color: var(--muted)
 }
 
-/* --- Inline Details Panel (full-width below the row) --- */
+/* --- Details panel (full-width box) --- */
 .details-panel {
   margin-top: 0.25rem;
 }
@@ -282,33 +177,117 @@ Feedback & Utilities
 
 .details-info {
   align-self: start;
-  col
 }
 
 .media-portrait.tall {
-  width: 100%;
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
+  aspect-ratio: 3/4;
   border-radius: 14px;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
-.mb-1{
-  color: var(--primary)
-}
-
-.mb-2{
-  color: var(--muted)
-}
-
 .section-title {
-  color: var(--muted-2)
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
 }
 
+/* --- Grid density (bigger tiles on desktop) --- */
+@media (min-width: 768px) {
+  .col-md-6 {
+    flex: 0 0 auto;
+    width: 50%;
+  }
+}
+@media (min-width: 992px) {
+  .col-lg-4 {
+    flex: 0 0 auto;
+    width: 33.333333%;
+  }
+}
 @media (max-width: 992px) {
   .details-grid {
     grid-template-columns: 1fr;
   }
 }
 
-/* --- Card media overlay (external link) --- */
+/* --- Notices --- */
+.notice {
+  padding: 0.65rem 0.9rem;
+  background: var(--glass-2);
+  border: 1px solid var(--glass-stroke);
+  border-radius: 12px;
+  color: var(--muted);
+}
+
+/* --- Focus (accessibility) --- */
+:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+/* --- Rating stars (color-changing) --- */
+.rating {
+  display: grid;
+  gap: 6px;
+}
+
+.rating-row {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.star {
+  font-size: 1.35rem;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.28);
+  background: transparent;
+  border: 1px solid var(--glass-stroke);
+  border-radius: 9px;
+  width: 38px;
+  height: 38px;
+  display: inline-grid;
+  place-items: center;
+  transition: transform 0.12s ease, box-shadow 0.12s ease,
+    border-color 0.12s ease, color 0.12s ease, background 0.12s ease;
+}
+
+.star:hover {
+  transform: translateY(-1px);
+}
+
+.star.on {
+  color: var(--star-color, #ffd76a);
+  border-color: color-mix(
+    in srgb,
+    var(--star-color, #ffd76a) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  background: color-mix(in srgb, var(--star-color, #ffd76a) 18%, transparent);
+  box-shadow: 0 0 0 2px
+    color-mix(in srgb, var(--star-color, #ffd76a) 35%, transparent);
+}
+
+/* Map container data-level -> star color */
+.rating[data-level="1"] {
+  --star-color: #ef4444;
+}
+.rating[data-level="2"] {
+  --star-color: #f97316;
+}
+.rating[data-level="3"] {
+  --star-color: #f59e0b;
+}
+.rating[data-level="4"] {
+  --star-color: #84cc16;
+}
+.rating[data-level="5"] {
+  --star-color: #22c55e;
+}
+
+/* Hovering state gives a slightly brighter feel */
+.rating.hovering .star.on {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--star-color) 45%, transparent);
+}

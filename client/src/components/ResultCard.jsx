@@ -30,24 +30,7 @@ export default function ResultCard({
       onClick={() => onSelect?.(id)}
       role="button"
     >
-      <div className="position-relative">
-        <img src={img} alt={title} className="media-portrait" />
-
-        {href && (
-          <a
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Open: ${title}`}
-            title="Open external link"
-            className="btn btn-sm btn-light position-absolute top-0 end-0 m-2 z-3 ext-link-btn"
-            onClick={(e) => e.stopPropagation()}
-          >
-            ↗
-          </a>
-        )}
-      </div>
-
+      <img src={img} alt={title} className="media-portrait" />
       <div className="card-body d-flex flex-column">
         <h5 className="card-title mb-1">{title}</h5>
         <div className="meta mb-2">

@@ -56,7 +56,7 @@ export default function Login() {
                 <button className="btn btn-primary" disabled={loading}>
                   {loading ? "Logging in…" : "Login"}
                 </button>
-                <div className="text-muted small">
+                <div className="small">
                   No account? <Link to="/register">Register</Link>
                 </div>
               </form>

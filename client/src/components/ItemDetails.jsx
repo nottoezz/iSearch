@@ -87,7 +87,7 @@ export default function ItemDetails({
           {(authors || description) && (
             <div className="mb-2">
               {authors && (
-                <div className="text-muted mb-2">
+                <div className="mb-2">
                   <strong>Authors:</strong> {authors}
                 </div>
               )}

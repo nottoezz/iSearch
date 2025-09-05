@@ -10,6 +10,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes.js";
 import searchRoutes from "./routes/search.routes.js";
 import favouriteRoutes from "./routes/favourite.routes.js";
+import ratingRoutes from "./routes/rating.routes.js";
 
 const app = express();
 
@@ -34,5 +35,6 @@ app.use("/api/health", (_req, res) => res.json({ ok: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/search", searchRoutes);
 app.use("/api/favourites", favouriteRoutes)
+app.use("/api/ratings", ratingRoutes);
 
 export default app;

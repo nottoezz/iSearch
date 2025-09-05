@@ -23,13 +23,13 @@ function useGridColumns() {
 }
 
 export default function Dashboard() {
-  const [mode, setMode] = useState("search"); // 'search' | 'favourites'
+  const [mode, setMode] = useState("search");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState([]);
   const [favourites, setFavourites] = useState([]);
   const [notice, setNotice] = useState("");
   const [expandedId, setExpandedId] = useState(null);
-  const [ratings, setRatings] = useState({}); // { [id]: { average, count, myRating } }
+  const [ratings, setRatings] = useState({}); 
   const panelRef = useRef(null);
   const cols = useGridColumns();
 

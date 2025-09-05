@@ -54,7 +54,7 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <li className="nav-item text-muted small">
+                <li className="nav-item small">
                   Welcome back{display ? `, ${display}` : ""}
                 </li>
                 <li className="nav-item">
