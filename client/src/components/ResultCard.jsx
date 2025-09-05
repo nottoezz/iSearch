@@ -24,14 +24,6 @@ export default function ResultCard({
     data.artistViewUrl ||
     null;
 
-  const href =
-    data.linkUrl ||
-    data.link ||
-    data.trackViewUrl ||
-    data.collectionViewUrl ||
-    data.artistViewUrl ||
-    null;
-
   return (
     <div
       className="card h-100 result-card hoverable"

@@ -27,7 +27,6 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState([]);
   const [favourites, setFavourites] = useState([]);
-  const [favourites, setFavourites] = useState([]);
   const [notice, setNotice] = useState("");
   const [expandedId, setExpandedId] = useState(null);
   const [ratings, setRatings] = useState({}); // { [id]: { average, count, myRating } }
