@@ -7,8 +7,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 // import routes
-import authRoutes from './routes/auth.routes.js';
+import authRoutes from "./routes/auth.routes.js";
 import searchRoutes from "./routes/search.routes.js";
+import favouriteRoutes from "./routes/favourite.routes.js";
 
 const app = express();
 
@@ -32,5 +33,6 @@ app.use(cookieParser());
 app.use("/api/health", (_req, res) => res.json({ ok: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/search", searchRoutes);
+app.use("/api/favourites", favouriteRoutes)
 
 export default app;
