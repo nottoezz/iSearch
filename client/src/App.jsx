@@ -11,7 +11,7 @@ import Dashboard from "./pages/Dashboard";
 export default function App() {
   return (
     // top-level routing
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <BrowserRouter basename="/iSearch">
       <AuthProvider>
         <ToastProvider>
           <Navbar />
