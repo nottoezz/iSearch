@@ -4,9 +4,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "nodemon server.js",
     "start": "node server.js"
   },
+  "engines": { "node": ">=18" },
   "keywords": [],
   "author": "",
   "license": "ISC",
