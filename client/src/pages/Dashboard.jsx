@@ -1,16 +1,16 @@
-// client/src/pages/Dashboard.jsx
 import React, { useEffect, useRef, useState } from "react";
 import api from "../services/api";
 import SearchBar from "../components/SearchBar";
 import ResultCard from "../components/ResultCard";
 import ItemDetails from "../components/ItemDetails";
+import { useToast } from "../components/ToastProvider";
 
+// compute how many columns are visible based on current breakpoint
 function useGridColumns() {
-  // Matches: col-12 col-sm-6 col-md-6 col-lg-4  => 1 / 2 / 2 / 3 cols
   const get = () => {
     const w = window.innerWidth;
-    if (w >= 992) return 3; // lg and up
-    if (w >= 576) return 2; // sm and md
+    if (w >= 992) return 3; // lg+
+    if (w >= 576) return 2; // sm/md
     return 1; // xs
   };
   const [cols, setCols] = useState(get);
@@ -22,22 +22,42 @@ function useGridColumns() {
   return cols;
 }
 
+// normalise id from either search item or favourite row
+const getId = (entry) => String(entry?.item?.id ?? entry?.id);
+
 export default function Dashboard() {
-  const [mode, setMode] = useState("search");
+  // view state
+  const [mode, setMode] = useState("search"); // 'search' | 'favourites'
   const [loading, setLoading] = useState(false);
+
+  // data state
   const [results, setResults] = useState([]);
-  const [favourites, setFavourites] = useState([]);
+  const [favourites, setFavourites] = useState([]); // [{ id, item }]
+  const [favIds, setFavIds] = useState(new Set()); // quick lookup for ui toggles
+
+  // ui feedback / details panel state
   const [notice, setNotice] = useState("");
   const [expandedId, setExpandedId] = useState(null);
-  const [ratings, setRatings] = useState({}); 
+  const [ratings, setRatings] = useState({}); // per-item rating payload
   const panelRef = useRef(null);
+
   const cols = useGridColumns();
+  const { addToast } = useToast();
 
-  const flash = (msg) => {
-    setNotice(msg);
-    setTimeout(() => setNotice(""), 1500);
-  };
+  // preload favourite ids once so search cards can render add/remove correctly
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await api.get("/favourites");
+        const items = Array.isArray(data) ? data : data.items || [];
+        setFavIds(new Set(items.map(getId)));
+      } catch {
+        /* silent */
+      }
+    })();
+  }, []);
 
+  // run a search request
   const onSearch = async ({ term, media }) => {
     setMode("search");
     setExpandedId(null);
@@ -58,6 +78,7 @@ export default function Dashboard() {
     }
   };
 
+  // fetch full favourites list (used when switching to favourites tab)
   const loadFavourites = async () => {
     setLoading(true);
     setNotice("");
@@ -65,6 +86,7 @@ export default function Dashboard() {
       const { data } = await api.get("/favourites");
       const items = Array.isArray(data) ? data : data.items || [];
       setFavourites(items);
+      setFavIds(new Set(items.map(getId)));
       if (!items.length) setNotice("No favourites yet.");
     } catch (e) {
       setNotice(e.response?.data?.error || "Failed to load favourites");
@@ -73,53 +95,94 @@ export default function Dashboard() {
     }
   };
 
+  // optimistic add to favourites (instant ui), revert on error
   const addToFavourites = async (item) => {
+    const idStr = String(item.id);
+    const prevIds = new Set(favIds);
+    setFavIds((s) => new Set(s).add(idStr));
+
+    let optimisticRow;
+    if (mode === "favourites") {
+      optimisticRow = { id: `tmp-${idStr}`, item };
+      setFavourites((prev) => [optimisticRow, ...prev]);
+    }
+
     try {
       await api.post("/favourites", { item });
-      if (mode === "favourites")
-        setFavourites((prev) => [{ id: "temp", item }, ...prev]);
-      flash("Added to favourites");
+      addToast("Added to favourites", { type: "success" });
     } catch (e) {
-      flash(e.response?.data?.error || "Could not add to favourites");
+      // revert if server failed
+      setFavIds(prevIds);
+      if (mode === "favourites" && optimisticRow) {
+        setFavourites((prev) => prev.filter((r) => r !== optimisticRow));
+      }
+      addToast(e.response?.data?.error || "Could not add to favourites", {
+        type: "error",
+      });
     }
   };
 
+  // optimistic remove (instant ui), revert on error
   const removeFavourite = async (itemId) => {
+    const idStr = String(itemId);
+
+    const prevIds = new Set(favIds);
+    const prevFavs = favourites.slice();
+
+    // local update first
+    setFavIds((s) => {
+      const n = new Set(s);
+      n.delete(idStr);
+      return n;
+    });
+    if (mode === "favourites") {
+      setFavourites((prev) => prev.filter((d) => getId(d) !== idStr));
+    }
+    if (expandedId === idStr) setExpandedId(null);
+
     try {
-      await api.delete(`/favourites/${encodeURIComponent(String(itemId))}`);
-      setFavourites((prev) =>
-        prev.filter((d) => (d.item?.id || d.id) !== String(itemId))
-      );
-      if (expandedId === String(itemId)) setExpandedId(null);
+      await api.delete(`/favourites/${encodeURIComponent(idStr)}`);
+      addToast("Removed from favourites", { type: "success" });
     } catch (e) {
-      flash(e.response?.data?.error || "Could not remove favourite");
+      // revert if server failed
+      setFavIds(prevIds);
+      if (mode === "favourites") setFavourites(prevFavs);
+      addToast(e.response?.data?.error || "Could not remove favourite", {
+        type: "error",
+      });
     }
   };
 
+  // load favourites when switching to that tab
   useEffect(() => {
     if (mode === "favourites") loadFavourites();
   }, [mode]);
 
+  // fetch rating payload when details panel opens
   useEffect(() => {
-    const id = expandedId;
-    if (!id) return;
+    if (!expandedId) return;
     (async () => {
       try {
-        const { data } = await api.get(`/ratings/${encodeURIComponent(id)}`);
-        setRatings((prev) => ({ ...prev, [id]: data || {} }));
+        const { data } = await api.get(
+          `/ratings/${encodeURIComponent(expandedId)}`
+        );
+        setRatings((prev) => ({ ...prev, [expandedId]: data || {} }));
       } catch {
         /* ignore */
       }
     })();
   }, [expandedId]);
 
+  // smooth scroll to the details panel when it appears
   useEffect(() => {
     if (panelRef.current)
       panelRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [expandedId]);
 
-  // Close panel if selected item disappears from the current list
+  // choose data source based on active tab
   const list = mode === "search" ? results : favourites;
+
+  // if an expanded item disappears (e.g., removed), close the panel
   useEffect(() => {
     if (!expandedId) return;
     const stillThere = list.some(
@@ -128,6 +191,7 @@ export default function Dashboard() {
     if (!stillThere) setExpandedId(null);
   }, [list, expandedId]);
 
+  // submit a user rating and merge response
   const handleRate = async (itemId, n) => {
     try {
       const { data } = await api.post(
@@ -136,11 +200,12 @@ export default function Dashboard() {
       );
       setRatings((prev) => ({ ...prev, [itemId]: data || { myRating: n } }));
     } catch (e) {
-      flash(e.response?.data?.error || "Rating failed");
+      addToast(e.response?.data?.error || "Rating failed", { type: "error" });
     }
   };
 
-  // Calculate where to place the full-width panel: after the row that holds expandedId
+  // figure out where to insert the full-width details panel:
+  // place it after the end of the row that contains the selected card
   const expandedIndex = expandedId
     ? list.findIndex((it) => String((it.item || it).id) === String(expandedId))
     : -1;
@@ -163,6 +228,7 @@ export default function Dashboard() {
               mode === "search" ? "btn-primary" : "btn-outline-secondary"
             }`}
             onClick={() => {
+              // switch to search and collapse details
               setMode("search");
               setExpandedId(null);
             }}
@@ -174,6 +240,7 @@ export default function Dashboard() {
               mode === "favourites" ? "btn-primary" : "btn-outline-secondary"
             }`}
             onClick={() => {
+              // switch to favourites and collapse details
               setMode("favourites");
               setExpandedId(null);
             }}
@@ -201,7 +268,7 @@ export default function Dashboard() {
         {list.map((it, i) => {
           const data = it.item || it;
           const id = String(data.id);
-          const isFav = mode === "favourites";
+          const isFav = favIds.has(id); // drives add/remove state on every card
 
           const tile = (
             <div
@@ -220,10 +287,10 @@ export default function Dashboard() {
             </div>
           );
 
-          // if this is not the end of the expanded row, just render the tile
+          // render the tile normally unless this index closes the row with the expanded card
           if (i !== panelRowEndIndex) return tile;
 
-          // otherwise, append the full-width panel *after* the row
+          // append the full-width details card after the row that contains the expanded card
           return (
             <React.Fragment key={`row-end-${i}-${mode}`}>
               {tile}
@@ -231,7 +298,7 @@ export default function Dashboard() {
                 <div className="col-12" ref={panelRef}>
                   <ItemDetails
                     item={list[expandedIndex]}
-                    isFavourite={isFav}
+                    isFavourite={favIds.has(String(expandedId))}
                     onAdd={addToFavourites}
                     onRemove={removeFavourite}
                     rating={ratings[expandedId]}

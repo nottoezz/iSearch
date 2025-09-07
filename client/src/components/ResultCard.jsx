@@ -6,7 +6,10 @@ export default function ResultCard({
   onAdd,
   onRemove,
 }) {
+  // normalise shape (favourites wrap the item)
   const data = item?.item || item || {};
+
+  // derive display fields with safe fallbacks
   const id = String(data.id ?? "");
   const img =
     data.artwork || "https://via.placeholder.com/1200x1200?text=No+Art";
@@ -16,6 +19,7 @@ export default function ResultCard({
     ? new Date(data.releaseDate).toISOString().slice(0, 10)
     : "";
 
+  // pick any available external link field
   const href =
     data.linkUrl ||
     data.link ||
@@ -25,12 +29,14 @@ export default function ResultCard({
     null;
 
   return (
+    // whole card is clickable to open details
     <div
       className="card h-100 result-card hoverable"
       onClick={() => onSelect?.(id)}
-      role="button"
+      role="button" // basic a11y hint
     >
       <img src={img} alt={title} className="media-portrait" />
+
       <div className="card-body d-flex flex-column">
         <h5 className="card-title mb-1">{title}</h5>
         <div className="meta mb-2">
@@ -39,6 +45,7 @@ export default function ResultCard({
         </div>
 
         <div className="mt-auto d-flex gap-2">
+          {/* open external page without triggering card click */}
           {href && (
             <a
               className="btn btn-outline-secondary btn-sm"
@@ -50,6 +57,8 @@ export default function ResultCard({
               View
             </a>
           )}
+
+          {/* toggle favourite; stop propagation to avoid opening details */}
           {!isFavourite ? (
             <button
               className="btn btn-primary btn-sm"

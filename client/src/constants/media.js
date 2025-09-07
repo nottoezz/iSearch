@@ -1,4 +1,4 @@
-// Map human labels to iTunes API media keys
+// map labels to iTunes API media keys
 export const MEDIA_OPTIONS = [
   { label: "All", value: "all" },
   { label: "Movie", value: "movie" },

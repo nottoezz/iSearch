@@ -2,15 +2,18 @@ import { createContext, useContext, useEffect, useState } from "react";
 import api from "../services/api";
 
 const AuthCtx = createContext(null);
+// small hook to read auth context
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthCtx);
 
 export default function AuthProvider({ children }) {
+  // seed user from localstorage on first load
   const [user, setUser] = useState(() => {
     const raw = localStorage.getItem("user");
     return raw ? JSON.parse(raw) : null;
   });
 
+  // store token + user and sync state/localstorage
   const setAuth = ({ accessToken, user }) => {
     if (accessToken) localStorage.setItem("accessToken", accessToken);
     if (user) {
@@ -19,11 +22,13 @@ export default function AuthProvider({ children }) {
     }
   };
 
+  // login then persist auth
   const login = async (email, password) => {
     const { data } = await api.post("/auth/login", { email, password });
     setAuth(data);
   };
 
+  // register then persist auth
   const register = async (name, email, password) => {
     const { data } = await api.post("/auth/register", {
       name,
@@ -33,18 +38,19 @@ export default function AuthProvider({ children }) {
     setAuth(data);
   };
 
+  // best-effort logout; always clear local state
   const logout = async () => {
     try {
       await api.post("/auth/logout");
     } catch {
-      // Ignore logout errors
+      /* ignore network errors */
     }
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
     setUser(null);
   };
 
-  // Hydrate on refresh if we have a token but no user
+  // on refresh: if token exists but user missing, fetch profile
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (token && !user) {

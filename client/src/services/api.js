@@ -1,17 +1,25 @@
 import axios from "axios";
 
+// resolve api base url (falls back to proxy /api in dev)
 const baseURL = import.meta.env.VITE_API_BASE_URL || "/api";
 console.log("[api] baseURL =", baseURL);
 
+// create axios instance with cookies enabled
 const api = axios.create({
   baseURL,
   withCredentials: true,
 });
 
+// attach bearer token and lightweight dev logging
 api.interceptors.request.use((config) => {
+  // inject access token if present
   const token = localStorage.getItem("accessToken");
   if (token) config.headers.Authorization = `Bearer ${token}`;
+
+  // simple latency marker
   config._ts = Date.now();
+
+  // dev-only request log
   if (import.meta.env.DEV) {
     console.log(
       `[api →] ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`,
@@ -19,9 +27,11 @@ api.interceptors.request.use((config) => {
       config.data || ""
     );
   }
+
   return config;
 });
 
+// pretty response logging and unified error surface
 api.interceptors.response.use(
   (res) => {
     if (import.meta.env.DEV) {
@@ -35,6 +45,7 @@ api.interceptors.response.use(
     return res;
   },
   (err) => {
+    // normalize status and print useful context
     const s = err.response?.status ?? "NETWORK";
     const cfg = err.config || {};
     console.error(

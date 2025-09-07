@@ -1,4 +1,4 @@
-/* --- Theme (Aurora Glass, higher contrast) --- */
+/* --- theme (aurora glass, higher contrast) --- */
 :root {
   --bg: #070b18;
   --text: #f2f7ff;
@@ -23,7 +23,7 @@
   --fs: 18px;
 }
 
-/* --- Background & base typography --- */
+/* --- background & base typography --- */
 body {
   margin: 0;
   background: radial-gradient(
@@ -50,7 +50,7 @@ body {
   background-attachment: fixed;
 }
 
-/* --- Navbar & cards (glass) --- */
+/* --- navbar & cards (glass) --- */
 .navbar {
   background: var(--glass-1) !important;
   backdrop-filter: blur(var(--blur)) saturate(130%);
@@ -68,7 +68,7 @@ body {
   box-shadow: var(--shadow);
 }
 
-/* --- Forms & buttons --- */
+/* --- forms & buttons --- */
 .form-control,
 .form-select {
   background: var(--glass-2);
@@ -88,8 +88,9 @@ body {
   box-shadow: 0 0 0 0.18rem rgba(125, 211, 255, 0.25);
   outline: 0;
 }
+
 .form-label {
-  color: var(--primary)
+  color: var(--primary);
 }
 
 .btn {
@@ -119,19 +120,22 @@ body {
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.22);
 }
+
 .small {
   color: var(--muted);
 }
 
-/* --- Result cards (readable hierarchy) --- */
+/* --- result cards (readable hierarchy) --- */
 .result-card .card-img-top,
-.media-portrait { height: auto !important; }
+.media-portrait {
+  height: auto !important;
+}
 
 .media-portrait {
   display: block;
   width: 100%;
   aspect-ratio: 3 / 4;
-  object-fit: cover; 
+  object-fit: cover;
   object-position: center;
   border-top-left-radius: var(--radius);
   border-top-right-radius: var(--radius);
@@ -150,16 +154,14 @@ body {
 .mb-1 {
   color: var(--primary);
 }
-
 .mb-2 {
   color: var(--text);
 }
-
 .mb-3 {
-  color: var(--muted)
+  color: var(--muted);
 }
 
-/* --- Details panel (full-width box) --- */
+/* --- details panel (full-width box) --- */
 .details-panel {
   margin-top: 0.25rem;
 }
@@ -180,7 +182,7 @@ body {
 }
 
 .media-portrait.tall {
-  aspect-ratio: 3/4;
+  aspect-ratio: 3 / 4;
   border-radius: 14px;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
@@ -192,26 +194,28 @@ body {
   font-size: 0.8rem;
 }
 
-/* --- Grid density (bigger tiles on desktop) --- */
+/* --- grid density (bigger tiles on desktop) --- */
 @media (min-width: 768px) {
   .col-md-6 {
     flex: 0 0 auto;
     width: 50%;
   }
 }
+
 @media (min-width: 992px) {
   .col-lg-4 {
     flex: 0 0 auto;
     width: 33.333333%;
   }
 }
+
 @media (max-width: 992px) {
   .details-grid {
     grid-template-columns: 1fr;
   }
 }
 
-/* --- Notices --- */
+/* --- notices --- */
 .notice {
   padding: 0.65rem 0.9rem;
   background: var(--glass-2);
@@ -220,14 +224,14 @@ body {
   color: var(--muted);
 }
 
-/* --- Focus (accessibility) --- */
+/* --- focus (accessibility) --- */
 :focus-visible {
   outline: 3px solid var(--ring);
   outline-offset: 2px;
   border-radius: 10px;
 }
 
-/* --- Rating stars (color-changing) --- */
+/* --- rating stars (color-changing) --- */
 .rating {
   display: grid;
   gap: 6px;
@@ -270,7 +274,7 @@ body {
     color-mix(in srgb, var(--star-color, #ffd76a) 35%, transparent);
 }
 
-/* Map container data-level -> star color */
+/* map container data-level -> star color */
 .rating[data-level="1"] {
   --star-color: #ef4444;
 }
@@ -287,7 +291,64 @@ body {
   --star-color: #22c55e;
 }
 
-/* Hovering state gives a slightly brighter feel */
+/* hovering state gives a slightly brighter feel */
 .rating.hovering .star.on {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--star-color) 45%, transparent);
+}
+
+/* --- toasts (non-blocking) --- */
+.toast-wrap {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 2000;
+  pointer-events: none;
+}
+
+.toast-item {
+  pointer-events: auto;
+  background: var(--glass-2, rgba(12, 18, 36, 0.78));
+  border: 1px solid var(--glass-stroke, rgba(255, 255, 255, 0.12));
+  color: var(--text, #f2f7ff);
+  padding: 0.7rem 0.9rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  animation: toast-in 0.18s ease;
+}
+
+.toast-item.success {
+  border-color: rgba(34, 197, 94, 0.35);
+  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.16);
+}
+
+.toast-item.error {
+  border-color: rgba(239, 68, 68, 0.35);
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.16);
+}
+
+.toast-close {
+  margin-left: 0.25rem;
+  background: transparent;
+  color: inherit;
+  border: none;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
