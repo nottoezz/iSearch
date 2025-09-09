@@ -16,6 +16,8 @@ coverage/
 .cache/
 tmp/
 temp/
+.github/workflows/deploy-pages.yml
+
 
 # Vite cache (sometimes appears locally)
 client/.vite/
