@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// resolve api base url (falls back to proxy /api in dev)
+// resolve api base url
 const baseURL = import.meta.env.VITE_API_BASE_URL || "/api";
 console.log("[api] baseURL =", baseURL);
 

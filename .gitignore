@@ -25,6 +25,8 @@ client/.vite/
 .env.*
 !.env.example
 !*/.env.example
+!client/.env.example
+!server/.env.example
 client/.env
 server/.env
 client/.env.*
